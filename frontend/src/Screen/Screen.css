@@ -15,7 +15,7 @@ overflow-x: hidden;
 
 .left-Navbar
 {
-    background-color:blue;
+    background-color:#0f0f0fd3;
     width: 20%;
     flex: 0 0 20%;
     /* height: auto; */
@@ -24,14 +24,14 @@ overflow-x: hidden;
 .container
 {
     width:80%;
-    background-color:aqua;
+    background-color:rgba(54, 56, 56, 0.854);
 }
 
 .navbar-container
 {
 
     display:flex;
-    background-color: rgb(218, 218, 218);
+    background-color: rgb(40 40 40);
     border:none ;
     border-radius: 20px;
     margin: 10px;
@@ -39,10 +39,6 @@ overflow-x: hidden;
     justify-content:space-between;
 }
 
-.textfield-container
-{
-
-}
 
 .textfield-container input 
 {
@@ -54,6 +50,7 @@ overflow-x: hidden;
     top:518px;
     left: 28px;
     font-size: 20px;
+    background-color: #282828;
 
 }
 .voice-btn{
@@ -99,7 +96,7 @@ align-items: center;
 .submit-icon
 {
     color: #fff;
-    font-size: 26px;
+    font-size: 24px;
 }
 
 /* .rightside
