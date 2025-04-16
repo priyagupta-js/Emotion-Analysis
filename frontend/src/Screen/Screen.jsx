@@ -1,63 +1,3 @@
-// // App.jsx
-// import React, { useState } from "react";
-// import "./Screen.css";
-
-//  function Screen() {
-//   const [sidebarOpen, setSidebarOpen] = useState(true);
-//   const [inputFocused, setInputFocused] = useState(false);
-//   const [darkMode, setDarkMode] = useState(true);
-
-//   const previousChats = [
-//     // "Overfitting in ML",
-//     // "AI Mental Health Assistant",
-//     // "Training with Wav2Vec2.0",
-//     // "MERN Food Takeaway App",
-//     // "Managing Overwhelm Together"
-//   ];
-
-//   const toggleDarkMode = () => setDarkMode(!darkMode);
-
-//   return (
-//     <div className={`app-container ${darkMode ? "dark" : "light"}`}>
-//       <button className="theme-toggle" onClick={toggleDarkMode}>
-//         {darkMode ? "🌞" : "🌙"}
-//       </button>
-
-//       {sidebarOpen && (
-//         <div className="sidebar">
-//           <button className="close-btn" onClick={() => setSidebarOpen(false)}>
-//             &times;
-//           </button>
-//           <h3>Library</h3>
-//           <ul>
-//             {previousChats.map((chat, index) => (
-//               <li key={index}>{chat}</li>
-//             ))}
-//           </ul>
-//         </div>
-//       )}
-
-//       <div className="main">
-//         {!sidebarOpen && (
-//           <button className="menu-btn" onClick={() => setSidebarOpen(true)}>
-//             &#9776;
-//           </button>
-//         )}
-//         <div className="center-text">What can I help with?</div>
-//         <div className={`input-container ${inputFocused ? "focused" : ""}`}>
-//           <input
-//             type="text"
-//             placeholder="Ask anything..."
-//             onFocus={() => setInputFocused(true)}
-//             onBlur={() => setInputFocused(false)}
-//           />
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Screen;
 import React, { useState, useRef } from "react";
 import "./Screen.css";
 import { FaMicrophone, FaArrowUp } from "react-icons/fa";
@@ -109,6 +49,24 @@ function Screen() {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/api/analyze", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }),
+      });
+  
+      const data = await response.json();
+      alert(`Predicted Emotion: ${data.emotion} (${(data.confidence * 100).toFixed(2)}%)`);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Something went wrong!");
+    }
+  };
+
   return (
     <>
       <div className="main-container">
@@ -136,7 +94,7 @@ function Screen() {
                 style={{ color: isListening ? "red" : "#fff" }}
               />
             </div>
-            <button type="submit" className="submit-btn">
+            <button type="submit" className="submit-btn" onClick={handleSubmit}>
               <FaArrowUp className="submit-icon" />
             </button>
           </div>
