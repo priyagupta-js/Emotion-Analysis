@@ -43,7 +43,7 @@ function Screen() {
 
   const sendAudio = async (audioBlob) => {
     const formData = new FormData();
-    formData.append("file", audioBlob, "input.wav");
+    formData.append("file", audioBlob,"input.wav");
 
     try {
       const response = await fetch("http://localhost:8080/api/audio", {
@@ -59,7 +59,7 @@ function Screen() {
       alert("Something went wrong.");
     }
   };
-
+/* 
   const handleTextSubmit = async () => {
     try {
       const response = await fetch("http://localhost:8080/api/analyze", {
@@ -71,13 +71,52 @@ function Screen() {
       });
 
       const data = await response.json();
-      alert(`Predicted Emotion: ${data.emotion} (${(data.confidence * 100).toFixed(2)}%)`);
+      alert(`Predicted Emotion: ${data.emotion}`);
     } catch (error) {
       console.error("Error:", error);
       alert("Something went wrong!");
     }
   };
+*/
+const handleTextSubmit = async () => {
+  try {
+    const response = await fetch("http://localhost:8080/api/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ text }),
+    });
 
+    const data = await response.json();
+
+    let customMessage = "";
+
+    switch (data.emotion.toLowerCase()) {
+      case "happiness":
+        customMessage = "Glad to hear you are happy!";
+        break;
+      case "sadness":
+        customMessage = "I am here for you. It's okay to feel sad sometimes.";
+        break;
+      case "worry":
+        customMessage = "Take a deep breath. Things will be okay.";
+        break;
+      case "neutral":
+        customMessage = "Thanks for sharing. Feel free to talk more.";
+        break;
+      case "love":
+        customMessage = "Love is beautiful. Spread it around!";
+        break;
+      default:
+        customMessage = "Thanks for expressing yourself!";
+    }
+    alert(`Predicted Emotion: ${data.emotion}\n${customMessage}`);
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Something went wrong!");
+}
+};
   return (
     <div className="main-container">
       <div className="left-Navbar">
