@@ -5,7 +5,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # predict.py
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # 0 = all logs, 3 = only fatal errors
-
+from collections import deque
+import shutil
+import datetime
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -14,6 +16,12 @@ import numpy as np
 import librosa
 from tensorflow.keras.models import load_model
 from gtts import gTTS
+
+last_predictions = deque(maxlen=3)
+
+# Folder to save examples
+AUTO_SAVE_DIR = os.path.join(BASE_DIR, "auto_saved_data")
+os.makedirs(AUTO_SAVE_DIR, exist_ok=True)
 
 try:
     model = load_model(os.path.join(BASE_DIR, "cnn_mfcc_ser_improv_model.h5"))
@@ -63,10 +71,26 @@ def text_to_speech(text):
     except Exception as e:
         print("TTS generation failed:", e)
         sys.exit(1)
+        
+def save_training_example(audio_path, emotion):
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    emotion_dir = os.path.join(AUTO_SAVE_DIR, emotion)
+    os.makedirs(emotion_dir, exist_ok=True)
+
+    dest_path = os.path.join(emotion_dir, f"{emotion}_{timestamp}.wav")
+    shutil.copy(audio_path, dest_path)
+    print(f"[INFO] Auto-saved training example: {dest_path}")
 
 if __name__ == "__main__":
     input_path = sys.argv[1]
     emotion = predict_emotion(input_path)
     print(f"Predicted: {emotion}")
     text_to_speech(f"The detected emotion is {emotion}")
+    
+    # Track prediction history
+    last_predictions.append(emotion)
 
+    # Check if last 3 are the same
+    if len(last_predictions) == 3 and all(e == emotion for e in last_predictions):
+        print(f"[INFO] Same emotion '{emotion}' detected 3 times. Saving example.")
+        save_training_example(input_path, emotion)

@@ -59,25 +59,7 @@ function Screen() {
       alert("Something went wrong.");
     }
   };
-/* 
-  const handleTextSubmit = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text }),
-      });
 
-      const data = await response.json();
-      alert(`Predicted Emotion: ${data.emotion}`);
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Something went wrong!");
-    }
-  };
-*/
 const handleTextSubmit = async () => {
   try {
     const response = await fetch("http://localhost:8080/api/analyze", {
