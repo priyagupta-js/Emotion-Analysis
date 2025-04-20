@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import "./Screen.css";
 import { FaMicrophone, FaPlay, FaArrowUp } from "react-icons/fa";
+import { GoalBasedAgent } from "../GoalBasedAgent";
 
 function Screen() {
   const [isRecording, setIsRecording] = useState(false);
@@ -72,27 +73,8 @@ const handleTextSubmit = async () => {
 
     const data = await response.json();
 
-    let customMessage = "";
+    const customMessage = GoalBasedAgent(data.emotion);
 
-    switch (data.emotion.toLowerCase()) {
-      case "happiness":
-        customMessage = "Glad to hear you are happy!";
-        break;
-      case "sadness":
-        customMessage = "I am here for you. It's okay to feel sad sometimes.";
-        break;
-      case "worry":
-        customMessage = "Take a deep breath. Things will be okay.";
-        break;
-      case "neutral":
-        customMessage = "Thanks for sharing. Feel free to talk more.";
-        break;
-      case "love":
-        customMessage = "Love is beautiful. Spread it around!";
-        break;
-      default:
-        customMessage = "Thanks for expressing yourself!";
-    }
     alert(`Predicted Emotion: ${data.emotion}\n${customMessage}`);
   } catch (error) {
     console.error("Error:", error);
